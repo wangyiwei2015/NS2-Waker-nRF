@@ -5,7 +5,9 @@ GROUP(-lgcc -lc -lnosys)
 
 MEMORY
 {
-  FLASH (rx) : ORIGIN = 0x19000, LENGTH = 0x17000
+  /* 末页 0x2F000~0x2FFFF 让给配对记录存储 (pair_record_t, 48 字节, main.c);
+     make flash 的 --sectorerase 只擦应用 hex 覆盖的扇区, 升级固件不丢配对记录. */
+  FLASH (rx) : ORIGIN = 0x19000, LENGTH = 0x16000
   RAM (rwx) :  ORIGIN = 0x20001118, LENGTH = 0x4ee8
 }
 

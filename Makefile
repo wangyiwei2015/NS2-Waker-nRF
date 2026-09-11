@@ -9,7 +9,7 @@ TARGETS          := nrf52810_xxaa
 #       无需条件编译, 框架在禁用时自动为 no-op.
 # 各模式必须使用独立构建目录: make 不跟踪 CFLAGS 变化 (.d 只跟踪头文件依赖),
 # 共用目录时切换模式会混用旧 .o, 导致 undefined reference 链接错误.
-APP_SRC           := main.c
+APP_SRC           := main.c persistence.c bt_probe.c bt_advertising.c
 LINKER_SCRIPT     := ble_app_beacon_gcc_nrf52.ld
 ifeq ($(RELEASE),1)
 CFLAGS += -DNRF_LOG_ENABLED=0 -DNRF_LOG_BACKEND_UART_ENABLED=0
@@ -65,12 +65,13 @@ SRC_FILES += \
   $(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_uart.c \
   $(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_uarte.c \
   $(SDK_ROOT)/components/libraries/bsp/bsp.c \
-  $(PROJ_DIR)/$(APP_SRC) \
+  $(APP_SRC:%=$(PROJ_DIR)/%) \
   $(SDK_ROOT)/external/segger_rtt/SEGGER_RTT.c \
   $(SDK_ROOT)/external/segger_rtt/SEGGER_RTT_Syscalls_GCC.c \
   $(SDK_ROOT)/external/segger_rtt/SEGGER_RTT_printf.c \
   $(SDK_ROOT)/components/ble/common/ble_advdata.c \
   $(SDK_ROOT)/components/ble/common/ble_srv_common.c \
+  $(SDK_ROOT)/components/libraries/crc16/crc16.c \
   $(SDK_ROOT)/external/utf_converter/utf.c \
   $(SDK_ROOT)/components/softdevice/common/nrf_sdh.c \
   $(SDK_ROOT)/components/softdevice/common/nrf_sdh_ble.c \
