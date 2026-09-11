@@ -18,6 +18,8 @@ else
 OUTPUT_DIRECTORY := _build
 endif
 
+# 注意！SDK目录要改成自己电脑上安装位置，从Nordic下载解压的SDK文件夹即可
+——目录未改，本行阻止make——
 SDK_ROOT := $(HOME)/Documents/nRF_Projects/nRF5_SDK_17.1.1_8173c8a
 PROJ_DIR := .
 
