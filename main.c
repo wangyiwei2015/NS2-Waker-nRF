@@ -43,13 +43,13 @@
 #define DEAD_BEEF 0xDEADBEEF // 栈转储时用作错误码的值, 可用于定位栈回溯位置
 
 // 蓝牙地址,小端格式: [0] = LSB ... [5] = MSB
-static const uint8_t target_ble_addr[BLE_GAP_ADDR_LEN] = {0x38, 0xB7, 0xD6, 0x8C, 0x81, 0x78};
+static const uint8_t target_ble_addr[BLE_GAP_ADDR_LEN] = {0x??, 0x??, 0x??, 0x8C, 0x81, 0x78}; 改成对应MAC/否则阻止编译
 #define WAKE_COMPANY_ID 0x0553 // 小端编码后线上字节顺序一致
 static uint8_t m_wake_packet[] = {
     0x01, 0x00, 0x03, 0x7E, 0x05, 0x66, 0x20, 0x00,
     0x01, 0x81, 0x4F, 0xF4, 0xE0, 0x8C, 0x81, 0x78,
     0x0F, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
-};
+}; 改成对应数据/否则阻止编译
 static ble_gap_adv_params_t m_adv_params;
 static uint8_t m_adv_handle = BLE_GAP_ADV_SET_HANDLE_NOT_SET;
 static uint8_t m_enc_advdata[BLE_GAP_ADV_SET_DATA_SIZE_MAX];  // 广播数据缓冲区 31字节恰好装满
