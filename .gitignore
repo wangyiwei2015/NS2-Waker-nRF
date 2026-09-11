@@ -1,0 +1,12 @@
+# 构建产物
+_build/
+_build_release/
+
+# IDE / 工具生成
+compile_commands.json
+.clangd/
+.cache/
+.vscode/ipch/
+
+# macOS
+.DS_Store

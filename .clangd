@@ -1,0 +1,12 @@
+CompileFlags:
+  Add: [-Wno-*, -fno-diagnostics-color]
+
+Diagnostics:
+  UnusedIncludes: None
+  MissingIncludes: None
+
+InlayHints:
+  Enabled: No
+
+Index:
+  Background: Build
