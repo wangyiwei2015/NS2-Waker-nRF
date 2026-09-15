@@ -32,7 +32,7 @@
 */
 #define NON_CONNECTABLE_ADV_INTERVAL MSEC_TO_UNITS(100, UNIT_0_625_MS) // 广播间隔 100 ms = 不可连接广播按蓝牙协议的最小值
 #define ADV_DURATION_10MS 100 // 广播时长单位: 10ms, 即 1 s, 到期后停止广播并上报 BLE_GAP_EVT_ADV_SET_TERMINATED
-#define TX_POWER_LEVEL     -4 // 发射功率 (dBm, S112 支持档位之一)
+#define TX_POWER_LEVEL -4 // 发射功率 (dBm, S112 支持档位之一)
 
 static uint8_t m_enc_advdata[BLE_GAP_ADV_SET_DATA_SIZE_MAX];  // 广播数据缓冲区 (31 字节)
 static uint8_t m_adv_handle = BLE_GAP_ADV_SET_HANDLE_NOT_SET;
@@ -62,18 +62,15 @@ NRF_SDH_BLE_OBSERVER(m_ble_observer, 3, ble_evt_handler, NULL);
 void bt_advertising_init(pair_record_t const * p_rec) {
     ret_code_t     err_code;
     ble_gap_addr_t gap_addr;
-
     // 1. GAP 地址 = 配对时抓到的对端 MAC (public, 原样).
     memset(&gap_addr, 0, sizeof(gap_addr));
     gap_addr.addr_type = p_rec->addr_type;
     memcpy(gap_addr.addr, p_rec->addr, BLE_GAP_ADDR_LEN);
     err_code = sd_ble_gap_addr_set(&gap_addr);
     APP_ERROR_CHECK(err_code);
-
     // 2. 广播数据 = 抓到的原样字节 (含对方 Flags/厂商数据等完整 AD 结构).
     memcpy(m_enc_advdata, p_rec->data, p_rec->data_len);
     m_adv_data.adv_data.len = p_rec->data_len;
-
     // 3. 广播参数: 非连接不可扫描无向 (PDU = ADV_NONCONN_IND, 典型 beacon 形态).
     memset(&m_adv_params, 0, sizeof(m_adv_params));
     m_adv_params.properties.type = BLE_GAP_ADV_TYPE_NONCONNECTABLE_NONSCANNABLE_UNDIRECTED;
@@ -92,6 +89,4 @@ void bt_advertising_start(void) {
     APP_ERROR_CHECK(err_code);
 }
 
-bool bt_advertising_is_done(void) {
-    return m_advertising_done;
-}
+bool bt_advertising_is_done(void) { return m_advertising_done; }

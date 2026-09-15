@@ -1,6 +1,6 @@
 /**
  * @file    main.c
- * @brief   NS2_Waker —— JC 设备唤醒广播克隆发送器 (自 ESP32-C3 Arduino 版本移植).
+ * @brief   NS2_Waker —— JC 设备唤醒广播克隆发送器.
  *          应用入口: 模式判定与流程编排. 功能模块:
  *            - persistence.c    配对记录 Flash 存取 (CRC16 + 掉电半写保护)
  *            - bt_probe.c       Radio Timeslot 嗅探配对 (S112 无扫描角色的唯一替代路径)
@@ -26,7 +26,7 @@
 #include "app_error.h"
 #include "nrf_delay.h"
 #include "nrf_gpio.h"
-#include "nrf_soc.h"             // sd_power_*
+#include "nrf_soc.h" // sd_power_*
 #include "nrf_sdh.h"
 #include "nrf_sdh_ble.h"
 #include "nrf_pwr_mgmt.h"
@@ -82,7 +82,6 @@ static void led_error_blink(void) {
 static void probe_tick(uint32_t elapsed_ms) {
     static uint32_t blink_div = 0;
     static uint32_t log_div   = 0;
-
     if (++blink_div >= 250) { // LED 慢闪, 500 ms 周期
         blink_div = 0;
         nrf_gpio_pin_toggle(LED_PIN);
@@ -150,6 +149,7 @@ int main(void) {
     nrf_delay_ms(10); // 内部上拉稳定 + 按键去抖
     bool pairing = detect_pairing_mode();
     NRF_LOG_INFO("NS2 waker started, mode=%u", (uint32_t)pairing);
+    NRF_LOG_PROCESS(); // 立即 flush: deferred 模式下默认要等 1 s 才落 RTT, 提前输出便于确认启动
     ble_stack_init();
     err_code = sd_power_dcdc_mode_set(NRF_POWER_DCDC_DISABLE);
     APP_ERROR_CHECK(err_code);

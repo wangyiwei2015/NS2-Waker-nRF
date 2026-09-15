@@ -60,26 +60,22 @@ bool persistence_save(pair_record_t const * p_rec) {
     ret_code_t     err_code;
     pair_record_t  rec;
     uint32_t       magic_word = PAIR_MAGIC;
-
     memcpy(&rec, p_rec, sizeof(rec));
     rec.pad0  = 0;
     memset(rec.pad1, 0, sizeof(rec.pad1));
     rec.crc16 = crc16_compute((uint8_t const *)&rec, 40, NULL);
     rec.magic = PAIR_MAGIC;
-
     m_flash_success = false;
     m_flash_error   = false;
     err_code = sd_flash_page_erase(PAIR_PAGE_NUM);
     APP_ERROR_CHECK(err_code);
     if (!flash_wait(500)) return false;
-
     // 数据+CRC 共 44 字节 (magic 字段不在本次写入范围内)
     m_flash_success = false;
     m_flash_error   = false;
     err_code = sd_flash_write((uint32_t *)PAIR_RECORD_ADDR, (uint32_t const *)&rec, 11);
     APP_ERROR_CHECK(err_code);
     if (!flash_wait(200)) return false;
-
     // magic 恒最后单独写入 —— 掉电半写保护的关键
     m_flash_success = false;
     m_flash_error   = false;
@@ -94,7 +90,8 @@ bool persistence_save(pair_record_t const * p_rec) {
 bool persistence_load(pair_record_t * p_rec) {
     pair_record_t const * p_flash = (pair_record_t const *)PAIR_RECORD_ADDR;
     if (p_flash->magic != PAIR_MAGIC) return false;
-    if (p_flash->addr_type != BLE_GAP_ADDR_TYPE_PUBLIC) return false;
+    if (p_flash->addr_type != BLE_GAP_ADDR_TYPE_PUBLIC
+        && p_flash->addr_type != BLE_GAP_ADDR_TYPE_RANDOM_STATIC) return false;
     if (p_flash->data_len > sizeof(p_flash->data)) return false;
     if (p_flash->crc16 != crc16_compute((uint8_t const *)p_flash, 40, NULL)) return false;
     memcpy(p_rec, p_flash, sizeof(pair_record_t));

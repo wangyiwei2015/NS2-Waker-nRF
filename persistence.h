@@ -15,7 +15,7 @@
  */
 typedef struct {
     uint8_t  addr[6];   // 对端 MAC, 小端, 与 ble_gap_addr_t.addr 一致
-    uint8_t  addr_type; // BLE_GAP_ADDR_TYPE_PUBLIC (本方案只配 public 地址)
+    uint8_t  addr_type; // BLE_GAP_ADDR_TYPE_PUBLIC 或 BLE_GAP_ADDR_TYPE_RANDOM_STATIC (静态随机)
     uint8_t  data_len;  // 广播数据长度 (PDU payload 去掉 AdvA, 0~31)
     uint8_t  data[31];  // 广播数据原样克隆
     uint8_t  pad0;      // 填充, 参与 CRC, 写入前清零

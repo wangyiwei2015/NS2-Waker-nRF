@@ -6,7 +6,6 @@
 #define BT_ADVERTISING_H__
 
 #include <stdbool.h>
-
 #include "persistence.h"
 
 // 应用 BLE 配置 tag: main.c 的栈初始化 (nrf_sdh_ble_default_cfg_set) 与本模块

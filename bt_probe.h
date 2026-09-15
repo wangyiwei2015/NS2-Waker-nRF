@@ -1,13 +1,12 @@
 /**
  * @file    bt_probe.h
- * @brief   Radio Timeslot 嗅探配对: 定向找 vendor 前缀的 public 地址 beacon.
+ * @brief   Radio Timeslot 嗅探配对: 定向找 78:81:8C 前缀的 public 地址 beacon.
  */
 #ifndef BT_PROBE_H__
 #define BT_PROBE_H__
 
 #include <stdbool.h>
 #include <stdint.h>
-
 #include "persistence.h"
 
 /**
@@ -16,17 +15,18 @@
  */
 typedef void (*bt_probe_tick_fn_t)(uint32_t elapsed_ms);
 
-// 嗅探诊断计数 —— 用于区分射频/CRC/过滤哪一层出问题
+// 嗅探运行统计 (供 UI 显示)
 typedef struct {
     uint32_t rx_total;  // 收到的包总数 (含 CRC 错)
     uint32_t rx_crc_ok; // CRC 正确的包数
-    uint32_t rx_match;  // 前缀命中数
+    uint32_t rx_match;  // 命中数
     uint8_t  cur_ch;    // 当前监听信道 (37/38/39)
 } bt_probe_stats_t;
 
 /**
  * 配对嗅探主流程 (含 Radio Timeslot 会话生命周期管理):
- *   打开会话 -> 循环 (收包 / 轮换信道请求新 slot / 每 ms 回调 tick) -> 关会话.
+ *   打开会话 -> 首个 EARLIEST 请求 -> 收包/TIMER0 回调 EXTEND 续片至超时或命中
+ *   -> 关会话. 收包在 RADIO 中断内完成; 主循环只做计时与退路恢复, 每 ms 回调 tick.
  *
  * 前提: SoftDevice 已使能.
  * 返回 true = 命中目标, *p_out 为候选记录 (尚未落盘, 持久化由调用方决定,
@@ -35,7 +35,7 @@ typedef struct {
  */
 bool bt_probe_run(pair_record_t * p_out, bt_probe_tick_fn_t tick);
 
-// 读取诊断计数 (可在 tick 回调里调用)
+// 读取运行统计 (可在 tick 回调里调用)
 void bt_probe_stats_get(bt_probe_stats_t * p_stats);
 
 #endif // BT_PROBE_H__
