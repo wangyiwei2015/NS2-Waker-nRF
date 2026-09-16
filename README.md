@@ -149,6 +149,8 @@ baseMac 末字节 −2 的旁注一致）。
 ## 5. 构建与烧录
 
 ```bash
+cd …/Firmware
+
 make                 # DEBUG 版, 带 RTT 日志, 产物 _build/
 make RELEASE=1       # 量产版, NRF_LOG 全裁剪为 no-op, 产物 _build_release/ (Flash/RAM 大幅缩小)
 

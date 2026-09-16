@@ -18,9 +18,11 @@ else
 OUTPUT_DIRECTORY := _build
 endif
 
-# 注意！SDK目录要改成自己电脑上安装位置，从Nordic下载解压的SDK文件夹即可
-——目录未改，本行阻止make——
-SDK_ROOT := $(HOME)/Documents/nRF_Projects/nRF5_SDK_17.1.1_8173c8a
+# 本机环境配置(不受版本控制, 见 .gitignore): 在 config.local.mk 中设置 SDK_ROOT
+-include config.local.mk
+ifeq ($(origin SDK_ROOT),undefined)
+$(error SDK_ROOT 未定义: 请创建 config.local.mk 并写入 SDK_ROOT := <Nordic SDK 解压目录>)
+endif
 PROJ_DIR := .
 
 $(OUTPUT_DIRECTORY)/nrf52810_xxaa.out: \
