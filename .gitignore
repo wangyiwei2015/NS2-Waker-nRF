@@ -14,3 +14,5 @@ Firmware/.vscode/ipch/
 
 # 本机环境配置 (含 SDK_ROOT 等本机路径)
 Firmware/config.local.mk
+Firmware/_debug
+Firmware/_release

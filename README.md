@@ -45,7 +45,7 @@
 | 唤醒键 | **P0.12**，低有效，内部上拉（宏 `WAKEUP_BUTTON_PIN`，便于改板） |
 | LED | **P0.06**，开漏驱动（`NRF_GPIO_PIN_S0D1`），低电平点亮 |
 | LF 时钟 | **片内 RC**（PCB 无 32.768 kHz 晶振；`CLOCK_CONFIG_LF_SRC=0` 等） |
-| 电源 | 电池直连 VDD；**禁用 DC-DC，使用内部 LDO**（DCC 引脚无外部 LC 电路，以后要修改成DCDC） |
+| 电源 | 电池直连 VDD；**使用 DC-DC，禁用内部 LDO**（DCC 引脚外部 LC 电路） |
 
 > 调试器（J-Link SWD）连接时芯片无法真正进入 System OFF，测休眠电流前必须断开调试器。
 

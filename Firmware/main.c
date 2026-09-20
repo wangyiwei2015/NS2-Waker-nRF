@@ -151,7 +151,9 @@ int main(void) {
     NRF_LOG_INFO("NS2 waker started, mode=%u", (uint32_t)pairing);
     NRF_LOG_PROCESS(); // 立即 flush: deferred 模式下默认要等 1 s 才落 RTT, 提前输出便于确认启动
     ble_stack_init();
-    err_code = sd_power_dcdc_mode_set(NRF_POWER_DCDC_DISABLE);
+    // 使用 DC-DC 降压以降低发射/活跃期功耗; SoftDevice 使能后只能通过 SVC 调用配置.
+    // sdk_config.h 中 POWER_CONFIG_DEFAULT_DCDCEN / NRFX_POWER_CONFIG_DEFAULT_DCDCEN 仅声明片上 DCDC 组件存在, 真正的开关由本次运行时调用决定.
+    err_code = sd_power_dcdc_mode_set(NRF_POWER_DCDC_ENABLE);
     APP_ERROR_CHECK(err_code);
     if (pairing) {
         // 嗅探 -> 落盘: bt_probe_run 返回时会话已关闭, 之后写 Flash 安全

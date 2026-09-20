@@ -2,9 +2,9 @@ PROJECT_NAME     := ble_app_beacon_pca10040e_s112
 TARGETS          := nrf52810_xxaa
 
 # 构建模式:
-#   make               -> 正式固件 main.c (NS2_Waker), DEBUG 模式保留日志, 产物在 _build/
+#   make               -> 正式固件 main.c (NS2_Waker), DEBUG 模式保留日志, 产物在 _debug/
 #   make RELEASE=1     -> 量产模式: 覆盖 sdk_config.h, NRF_LOG_* 全部变为空操作, 日志模块代码
-#                         由链接器 --gc-sections 自动裁剪 (零 RAM/Flash/运行开销), 产物在 _build_release/
+#                         由链接器 --gc-sections 自动裁剪 (零 RAM/Flash/运行开销), 产物在 _release/
 # 说明: sdk_config.h 中各开关均有 #ifndef 保护, 可用命令行 -D 覆盖; 源码中的 NRF_LOG_* 调用点
 #       无需条件编译, 框架在禁用时自动为 no-op.
 # 各模式必须使用独立构建目录: make 不跟踪 CFLAGS 变化 (.d 只跟踪头文件依赖),
@@ -13,9 +13,9 @@ APP_SRC           := main.c persistence.c bt_probe.c bt_advertising.c
 LINKER_SCRIPT     := ble_app_beacon_gcc_nrf52.ld
 ifeq ($(RELEASE),1)
 CFLAGS += -DNRF_LOG_ENABLED=0 -DNRF_LOG_BACKEND_UART_ENABLED=0
-OUTPUT_DIRECTORY := _build_release
+OUTPUT_DIRECTORY := _release
 else
-OUTPUT_DIRECTORY := _build
+OUTPUT_DIRECTORY := _debug
 endif
 
 # 本机环境配置(不受版本控制, 见 .gitignore): 在 config.local.mk 中设置 SDK_ROOT
